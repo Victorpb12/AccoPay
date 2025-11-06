@@ -1,7 +1,8 @@
 {
   "expo": {
-    "name": "contas-app",
-    "slug": "contas-app",
+    "name": "AccoPay",
+    "slug": "accoPay",
+    "displayName": "AccoPay",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -17,7 +18,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,

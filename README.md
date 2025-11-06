@@ -1,4 +1,4 @@
-# contas-app
+# AccoPay
 
 Um app simples e elegante para controle de gastos pessoais — cadastro de contas, parcelas e acompanhamento dos pagamentos. Feito com Expo + React Native, TypeScript e Tailwind (via NativeWind). Ideal pra quem quer organizar boletos, parcelas e entradas sem dor de cabeça.
 
