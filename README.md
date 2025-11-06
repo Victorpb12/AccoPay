@@ -20,7 +20,7 @@ Um app simples e elegante para controle de gastos pessoais — cadastro de conta
 - Navegação: **@react-navigation/native** + stacks/tabs  
 - Armazenamento local: **@react-native-async-storage/async-storage**
 
-(As dependências e versões estão no `package.json` utilizado no projeto.) :contentReference[oaicite:0]{index=0}
+(As dependências e versões estão no `package.json` utilizado no projeto.)
 
 ---
 
@@ -30,7 +30,7 @@ Um app simples e elegante para controle de gastos pessoais — cadastro de conta
 - `src/components/` — componentes reutilizáveis (ex: `ContaItem.tsx`)  
 - `src/storage` — persistência (AsyncStorage)  
 - `tailwind.config.js` / `nativewind-env.d.ts` — config do estilo  
-- `package.json` — scripts e dependências. :contentReference[oaicite:1]{index=1}
+- `package.json` — scripts e dependências.
 
 ---
 
