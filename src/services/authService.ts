@@ -1,28 +1,32 @@
-type AuthResult = { ok: true; user?: any } | { ok: false; error?: string };
+import { createClient } from "@supabase/supabase-js";
+
+const SUPABASE_URL = process.env.SUPABASE_URL!;
+const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY!;
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+type AuthResult = { ok: true; user: any } | { ok: false; error: string };
 
 export const authService = {
-  signIn: async (
-    email: string,
-    password: string,
-    remember = false
-  ): Promise<AuthResult> => {
-    await new Promise((r) => setTimeout(r, 700));
-
-    if (!email || !email.includes("@"))
-      return { ok: false, error: "Email inválido" };
-    if (password !== "1234")
-      return { ok: false, error: "Senha inválida (use 1234 no stub)" };
-
-    return { ok: true, user: { id: "local-1", email } };
+  signIn: async (email: string, password: string): Promise<AuthResult> => {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+    if (error) return { ok: false, error: error.message };
+    return { ok: true, user: data.user };
   },
-  signUp: async (email: string, password: string, meta?: any) => {
-    await new Promise((r) => setTimeout(r, 800));
-    if (!email.includes("@")) return { ok: false, error: "Email inválido" };
-    return { ok: true, user: { id: "local-signup-1", email, ...meta } };
+
+  signUp: async (email: string, password: string): Promise<AuthResult> => {
+    const { data, error } = await supabase.auth.signUp({ email, password });
+    if (error) return { ok: false, error: error.message };
+    return { ok: true, user: data.user };
   },
-  resetPassword: async (email: string) => {
-    await new Promise((r) => setTimeout(r, 600));
-    if (!email.includes("@")) return { ok: false, error: "Email inválido" };
+
+  resetPassword: async (
+    email: string
+  ): Promise<{ ok: true } | { ok: false; error: string }> => {
+    const { data, error } = await supabase.auth.resetPasswordForEmail(email);
+    if (error) return { ok: false, error: error.message };
     return { ok: true };
   },
 };
