@@ -3,6 +3,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React from "react";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ContasScreen } from "../screens/ContasScreen";
 import { DetalhesContaScreen } from "../screens/DetalhesContaScreen";
 import { NovaContaScreen } from "../screens/NovaContaScreen";
@@ -21,6 +22,8 @@ const ContasStack = () => {
 };
 
 export const AppNavigator: React.FC = () => {
+  const insets = useSafeAreaInsets();
+
   return (
     <NavigationContainer>
       <Tab.Navigator
@@ -29,9 +32,9 @@ export const AppNavigator: React.FC = () => {
           tabBarActiveTintColor: "#2563eb",
           tabBarInactiveTintColor: "#9ca3af",
           tabBarStyle: {
-            paddingBottom: 5,
+            paddingBottom: (insets.bottom ?? 0) + 6,
             paddingTop: 5,
-            height: 60,
+            height: 60 + (insets.bottom ?? 0),
           },
         }}
       >
