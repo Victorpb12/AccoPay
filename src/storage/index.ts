@@ -1,45 +1,26 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { contasService } from "../services/contasService";
 import { Conta } from "../types";
 
-const STORAGE_KEY = "@contas_app:contas";
-
+// Agora usa Supabase ao invés de AsyncStorage local
 export const storageService = {
   async getContas(): Promise<Conta[]> {
-    try {
-      const data = await AsyncStorage.getItem(STORAGE_KEY);
-      return data ? JSON.parse(data) : [];
-    } catch (error) {
-      console.error("Erro ao carregar contas:", error);
-      return [];
-    }
+    return await contasService.getContas();
   },
 
   async saveContas(contas: Conta[]): Promise<void> {
-    try {
-      await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(contas));
-    } catch (error) {
-      console.error("Erro ao salvar contas:", error);
-    }
+    // Não usado mais, mas mantido para compatibilidade
+    console.warn("saveContas não é usado com Supabase");
   },
 
   async addConta(conta: Conta): Promise<void> {
-    const contas = await this.getContas();
-    contas.push(conta);
-    await this.saveContas(contas);
+    await contasService.addConta(conta);
   },
 
   async updateConta(contaAtualizada: Conta): Promise<void> {
-    const contas = await this.getContas();
-    const index = contas.findIndex((c) => c.id === contaAtualizada.id);
-    if (index !== -1) {
-      contas[index] = contaAtualizada;
-      await this.saveContas(contas);
-    }
+    await contasService.updateConta(contaAtualizada);
   },
 
   async deleteConta(id: string): Promise<void> {
-    const contas = await this.getContas();
-    const contasFiltradas = contas.filter((c) => c.id !== id);
-    await this.saveContas(contasFiltradas);
+    await contasService.deleteConta(id);
   },
 };

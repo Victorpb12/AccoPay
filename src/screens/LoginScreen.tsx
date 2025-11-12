@@ -1,4 +1,3 @@
-// src/screens/LoginScreen.tsx
 import { Ionicons } from "@expo/vector-icons";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React, { useState } from "react";
@@ -9,36 +8,34 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  View
+  View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { authService } from "../services/authService";
+import { useAuth } from "../contexts/AuthContext";
 
-// Ajuste esse tipo conforme seu RootStackParamList
 type RootStackParamList = {
   Login: undefined;
   Register: undefined;
   ForgotPassword: undefined;
-  Home: undefined;
 };
 
 type Props = NativeStackScreenProps<RootStackParamList, "Login">;
 
 export const LoginScreen: React.FC<Props> = ({ navigation }) => {
   const insets = useSafeAreaInsets();
+  const { signIn } = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  const [rememberMe, setRememberMe] = useState(false);
 
   const emailIsValid = (e: string) =>
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e.trim());
 
   const canSubmit =
-    email.trim().length > 0 && password.length >= 4 && emailIsValid(email);
+    email.trim().length > 0 && password.length >= 6 && emailIsValid(email);
 
   const handleLogin = async () => {
     setErrorMsg(null);
@@ -47,28 +44,21 @@ export const LoginScreen: React.FC<Props> = ({ navigation }) => {
       setErrorMsg("Insira um email válido.");
       return;
     }
-    if (password.length < 4) {
-      setErrorMsg("Senha muito curta.");
+    if (password.length < 6) {
+      setErrorMsg("Senha muito curta (mínimo 6 caracteres).");
       return;
     }
 
     setLoading(true);
     try {
-      // chamada para o service (atualmente stub) — trocar depois para Supabase
-      const result = await authService.signIn(
-        email.trim(),
-        password,
-        rememberMe
-      );
+      const result = await signIn(email.trim(), password);
 
-      if (result.ok) {
-        // navega para home ou rota principal
-        navigation.replace("Home");
-      } else {
+      if (!result.ok) {
         setErrorMsg(
           result.error || "Erro ao autenticar. Verifique email/senha."
         );
       }
+      // Se ok, o AuthContext vai atualizar automaticamente
     } catch (err: any) {
       setErrorMsg(err?.message || "Erro desconhecido.");
     } finally {
@@ -137,24 +127,7 @@ export const LoginScreen: React.FC<Props> = ({ navigation }) => {
             </TouchableOpacity>
           </View>
 
-          <View className="flex-row justify-between items-center mb-3">
-            <TouchableOpacity
-              onPress={() => setRememberMe((v) => !v)}
-              className="flex-row items-center"
-              accessibilityLabel="Lembrar-me"
-            >
-              <View
-                className={`w-5 h-5 rounded-sm mr-3 items-center justify-center ${
-                  rememberMe ? "bg-blue-600" : "bg-white border border-gray-300"
-                }`}
-              >
-                {rememberMe && (
-                  <Ionicons name="checkmark" size={14} color="#fff" />
-                )}
-              </View>
-              <Text className="text-sm text-gray-700">Lembrar-me</Text>
-            </TouchableOpacity>
-
+          <View className="flex-row justify-end items-center mb-3">
             <TouchableOpacity
               onPress={() => navigation.navigate("ForgotPassword")}
             >
@@ -172,7 +145,7 @@ export const LoginScreen: React.FC<Props> = ({ navigation }) => {
             onPress={handleLogin}
             disabled={!canSubmit || loading}
             className={`py-3 rounded-lg items-center ${
-              canSubmit ? "bg-blue-600" : "bg-blue-300"
+              canSubmit && !loading ? "bg-blue-600" : "bg-blue-300"
             }`}
             accessibilityLabel="Botão entrar"
           >
@@ -189,13 +162,6 @@ export const LoginScreen: React.FC<Props> = ({ navigation }) => {
               <Text className="text-blue-600 font-semibold">Criar conta</Text>
             </TouchableOpacity>
           </View>
-        </View>
-
-        <View className="mt-6 items-center">
-          <Text className="text-xs text-gray-400 text-center px-6">
-            Ao entrar você concorda com os termos (placeholder). A autenticação
-            será implementada com Supabase em seguida.
-          </Text>
         </View>
       </View>
     </KeyboardAvoidingView>

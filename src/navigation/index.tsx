@@ -5,7 +5,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React from "react";
 import { ActivityIndicator, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useAuth } from "../contexts/AuthContent";
+import { useAuth } from "../contexts/AuthContext";
 import { ContasScreen } from "../screens/ContasScreen";
 import { DetalhesContaScreen } from "../screens/DetalhesContaScreen";
 import { ForgotPasswordScreen } from "../screens/ForgotPasswordScreen";

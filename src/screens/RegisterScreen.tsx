@@ -17,7 +17,6 @@ import { authService } from "../services/authService";
 type RootStackParamList = {
   Register: undefined;
   Login: undefined;
-  Home: undefined;
 };
 
 type Props = NativeStackScreenProps<RootStackParamList, "Register">;
@@ -46,7 +45,7 @@ export const RegisterScreen: React.FC<Props> = ({ navigation }) => {
       return;
     }
     if (!passwordStrongEnough(password)) {
-      setErrorMsg("Senha muito curta — use pelo menos 6 caracteres.");
+      setErrorMsg("Senha muito curta – use pelo menos 6 caracteres.");
       return;
     }
     if (password !== confirm) {
@@ -56,14 +55,14 @@ export const RegisterScreen: React.FC<Props> = ({ navigation }) => {
 
     setLoading(true);
     try {
-      const res = (await authService.signUp?.(email.trim(), password, {
-        name,
-      })) ?? { ok: false, error: "signUp não implementado no authService" };
+      const res = await authService.signUp(email.trim(), password, {
+        name: name.trim(),
+      });
 
       if (res.ok) {
         Alert.alert(
           "Conta criada",
-          "Beleza — sua conta foi criada. Agora faça login.",
+          "Beleza – sua conta foi criada. Verifique seu email para confirmar.",
           [{ text: "Ok", onPress: () => navigation.replace("Login") }]
         );
       } else {
@@ -83,12 +82,12 @@ export const RegisterScreen: React.FC<Props> = ({ navigation }) => {
     >
       <View className="flex-1 bg-gray-50 px-6 pt-12">
         <View className="items-center mb-6">
-          <View className="bg-gradient-to-r from-blue-500 to-violet-500 rounded-full p-4 mb-4 shadow">
+          <View className="bg-blue-600 rounded-full p-4 mb-4 shadow">
             <Ionicons name="person-add-outline" size={36} color="#fff" />
           </View>
           <Text className="text-2xl font-bold text-gray-800">Criar conta</Text>
           <Text className="text-sm text-gray-500 mt-1">
-            Rápido e seguro — bora!
+            Rápido e seguro – bora!
           </Text>
         </View>
 
